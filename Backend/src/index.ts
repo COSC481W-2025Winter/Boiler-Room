@@ -3,6 +3,10 @@ import pg from 'pg'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import axios from 'axios'
+import { HowLongToBeatService } from 'howlongtobeat';
+
+let hltbService = new HowLongToBeatService();
+
 
 const { Pool } = pg
 dotenv.config()
@@ -47,6 +51,11 @@ app.get('/steam', async (req, res) => {
   const steamId = 76561199509790498n
   const data = await axios.get(`https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${key}&steamid=${steamId}&format=json&include_appinfo=true&include_played_free_games=true `)
   res.send([data.data.response.games[0], data.data.response.games[1], data.data.response.games[2]])
+})
+
+app.get('/hltb', async (req, res) => {
+  // hltbService.search('2127').then(result => console.log(result));
+  hltbService.detail('242760').then(result => console.log(result)).catch(e => console.error(e));
 })
 
 export default app
