@@ -25,7 +25,7 @@ export function Navbar() {
           <input className={styles.input} type='text' placeholder='Search' />
           <img src='/search.png' className={styles.search_icon} width={16} />
         </div>
-        <Link className={`${styles.links} ${styles.account}`} href='/Account'>
+        <Link className={`${styles.links} ${styles.userProfile}`} href='/UserProfile'>
           P
         </Link>
       </div>
