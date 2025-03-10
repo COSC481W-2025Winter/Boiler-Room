@@ -3,9 +3,6 @@
   justify-content: space-between;
   align-items: center;
   padding: 16px 24px;
-  font-family: Arial, sans-serif;
-  background-color: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(10px);
   text-align: center;
 }
 .nav_options {
@@ -15,13 +12,13 @@
 
 .logo, .links {
   padding: 12px;
-  color: white;
+  color: var(--text-primary);
   border-radius: 8px;
   text-decoration: none;
 }
 
 .logo:hover, .links:hover {
-  background-color: #273d61;
+  background-color: var(--button-secondary);
 }
 
 .logo {
@@ -30,7 +27,7 @@
 }
 
 .links {
-  background-color: #202b3e;
+  background-color: var(--button-primary);
 }
 
 .account {
