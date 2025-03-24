@@ -624,6 +624,7 @@ export async function insertGames(steamId: bigint) {
 
     //make a new set of string of gameIds
     const existingGameIds = new Set(existingGames.rows.map(row => String(row.game_id)));
+    
     //console.log('Existing game IDs:', existingGameIds);
 
     //get a string array of only games both user has and are in our database
@@ -700,7 +701,7 @@ export async function loadFriends(steamId: bigint) {
   let message = "";
 
   if (currentStatus === 1) {
-    message = "You are presently locked out, please try again later
+    message = "You are presently locked out, please try again later"
     return message
   }else if (currentStatus === 0) {
     console.log("Beginning friends querying")
