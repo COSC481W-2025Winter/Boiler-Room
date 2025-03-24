@@ -675,34 +675,6 @@ export async function insertGames(steamId: bigint) {
   }
 }
 
-app.get('/testLockout', async (req, res) => {
-  const result = await lockoutCheck();
-  res.json({ message: result });
-});
-
-export async function lockoutCheck() {
-  const selectResult = await pool.query('SELECT "code" FROM "Lockout"');
-  const row = selectResult.rows[0];
-  const currentStatus = row.code;
-
-  let newStatus;
-  let message = "";
-
-  if (currentStatus === 0) {
-    newStatus = 1;
-    message = "You weren't locked out but now you are";
-  } else if (currentStatus === 1) {
-    newStatus = 0;
-    message = "You were locked out but now you aren't";
-  } else {
-    return "We have no idea what your status is";
-  }
-
-  await pool.query('UPDATE "Lockout" SET "code" = $1', [newStatus]);
-
-  return message;
-}
-
 app.get('/testFriends', async (req, res) => {
   try {
     const steamId = BigInt("76561199154033472"); //me
@@ -720,6 +692,21 @@ export async function delay() {
 
 export async function loadFriends(steamId: bigint) {
   let forced: boolean = false;
+  const selectResult = await pool.query('SELECT "code" FROM "Lockout"');
+  const row = selectResult.rows[0];
+  const currentStatus = row.code;
+
+  let newStatus: number;
+  let message = "";
+
+  if (currentStatus === 1) {
+    message = "You are presently locked out, please try again later
+    return message
+  }else if (currentStatus === 0) {
+    console.log("Beginning friends querying")
+    newStatus = 1;
+    await pool.query('UPDATE "Lockout" SET "code" = $1', [newStatus]);
+  }
 
   const friendsResponse = await axios.get('http://api.steampowered.com/ISteamUser/GetFriendList/v0001/', {
     params: {
@@ -728,6 +715,8 @@ export async function loadFriends(steamId: bigint) {
       key: process.env.STEAM_API_KEY
     }
   });
+
+  await delay();
 
   const steamIds = friendsResponse.data.friendslist.friends.map(friend => friend.steamid.toString());
 
@@ -778,6 +767,8 @@ export async function loadFriends(steamId: bigint) {
         avatar
       });
     
+      await delay();
+      
     } catch (error) {
       console.error(`Error processing Steam ID ${steamId}:`, error.message);
     }
@@ -890,6 +881,9 @@ export async function loadFriends(steamId: bigint) {
       console.error('Error updating User_Games:', err);
     }
   }
+  newStatus = 0;
+  console.log("Unlocking API")
+  await pool.query('UPDATE "Lockout" SET "code" = $1', [newStatus]);
 
   const finalQuery = `
     WITH Friends AS (
