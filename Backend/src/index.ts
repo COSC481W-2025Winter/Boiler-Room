@@ -631,7 +631,6 @@ export async function insertGames(steamId: bigint) {
 
     //make a new set of string of gameIds
     const existingGameIds = new Set(existingGames.rows.map(row => String(row.game_id)));
-    
     //console.log('Existing game IDs:', existingGameIds);
 
     //get a string array of only games both user has and are in our database
