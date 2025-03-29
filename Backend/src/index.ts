@@ -675,13 +675,13 @@ export async function insertGames(steamId: bigint) {
   }
 }
 
-app.get('/testFriends', async (req, res) => {
+app.get('/friendsListInfo', async (req, res) => {
   try {
-    const steamId = BigInt("76561199154033472"); //me
+    const steamId = req.query.steamId || req.session.steamId 
     const result = await loadFriends(steamId);
     res.status(200).json(result);
   } catch (error) {
-    console.error('Error in /testFriends:', error);
+    console.error('Error in /friendsListInfo:', error);
     res.status(500).json({ error: 'Failed to load friends' });
   }
 });
@@ -700,7 +700,7 @@ export async function loadFriends(steamId: bigint) {
   let message = "";
 
   if (currentStatus === 1) {
-    message = "You are presently locked out, please try again later
+    message = "You are presently locked out, please try again later"
     return message
   }else if (currentStatus === 0) {
     console.log("Beginning friends querying")
