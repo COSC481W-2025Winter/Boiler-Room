@@ -647,14 +647,13 @@ app.get("/userGameSpecs", async (req, res) => {
 });
 
 export async function insertGames(steamId: bigint) {
-  const id = steamId.toString
   try {
     const response = await axios.get(
       //make our game request
       `https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/`,
       {
         params: {
-          steamid: id,
+          steamid: steamId,
           key: process.env.STEAM_API_KEY,
           format: 'json',
           include_appinfo: true,
@@ -745,6 +744,7 @@ export async function insertGames(steamId: bigint) {
 app.get('/resyncHelper', async (req, res) => {
   const steamId = req.query.steamId || req.session.steamId
   try {
+    console.log("Syncing friends")
     const forced = req.query.forced === 'true';
     await loadFriends(steamId, forced);
   } catch (error) {
@@ -753,11 +753,13 @@ app.get('/resyncHelper', async (req, res) => {
   }
 
   try{
+    console.log("Syncing games")
     insertGames(steamId)
   }catch (error) {
     console.error('Error in /resyncHelper:', error);
     res.status(500).json({ error: 'Failed to load friends' });
   }
+  console.log("Finished resyncing")
 });
 
 app.get('/friendsListInfo', async (req, res) => {
