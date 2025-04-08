@@ -46,20 +46,6 @@ const SingleGamePage = () => {
     <div className={styles.loading}>Loading...</div>
   ) : (
     <div className={styles.singleGameContainer}>
-      <div className={styles.titlePrice}>
-        <a target='_blank' href={'https://store.steampowered.com/app/' + gameid}>
-          <img
-            src='https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/512px-Steam_icon_logo.svg.png'
-            className={styles.redirectImage}
-            alt='Redirect'
-          />
-        </a>
-        <a className={styles.gameTitle}>{game.name} |</a>
-
-        <div className={styles.price}>
-          {game.price ? '$' + game.price : 'Not Available'}
-        </div>
-      </div>
       <div className={styles.gameContent}>
         {/* Left Column */}
         <div className={styles.gameLeft}>
@@ -80,6 +66,20 @@ const SingleGamePage = () => {
 
         {/* Right Column */}
         <div className={styles.gameRight}>
+          <div className={styles.titlePrice}>
+            <a target='_blank' href={'https://store.steampowered.com/app/' + gameid}>
+              <img
+                src='https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/512px-Steam_icon_logo.svg.png'
+                className={styles.redirectImage}
+                alt='Redirect'
+              />
+            </a>
+            <a className={styles.gameTitle}>{game.name} |</a>
+
+            <div className={styles.price}>
+              {game.price ? '$' + game.price : 'Not Available'}
+            </div>
+          </div>
           <div className={styles.gameSummary}>
             {game.description ? game.description : 'No description available.'}
           </div>
