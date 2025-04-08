@@ -75,7 +75,7 @@ export function Navbar() {
           Friends
         </Link>
         <Link className={styles.links} href='/NewGameRecs'>
-          New Game Recommendations
+          Recommendations
         </Link>
 
         <Searchbar />
