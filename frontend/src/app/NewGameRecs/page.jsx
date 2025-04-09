@@ -176,7 +176,6 @@ export default function GameRecommendation() {
     // } catch (err){
     //   console.error(err);
     // }
-    console.log('GameList:', gameList)
 
     console.log('Form Data Submitted:')
 
