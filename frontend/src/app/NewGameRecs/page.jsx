@@ -144,6 +144,7 @@ export default function GameRecommendation() {
       event.target.option2.checked ? 1 : null,
     ].filter((option) => option !== null)
     let maxHLTB = parseInt(event.target.maxHLTB.value, 10) || 10000
+    console.log('userStats', userStats)
     let genre = selectedGenres.map((g) => g.value)
     console.log('Genres:', genre)
     console.log('Genres.join:', genre.join(','))
@@ -214,6 +215,9 @@ export default function GameRecommendation() {
       errors += 'Boil Rating is invalid - 1 to 100.\n'
     }
     // ALERT CALL HERE
+    if (genre.length == 0) {
+      genre = [userStats[0].most_common_genre]
+    }
     if (errors.length > 0) {
       window.alert('ERROR:\n' + errors)
     } else {
