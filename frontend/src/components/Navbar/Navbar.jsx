@@ -19,24 +19,10 @@ export function Navbar() {
   const [showSteam, setShowSteam] = useState(false) // Track hover
   const [steamPFP, setPFP] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [theme, setTheme] = useState(true)
-
-  if (pathname === '/' || pathname === '/LoginRedirect') return null
+  const [theme] = useState(true)
 
   useEffect(() => {
     async function fetchProfileData() {
-      try {
-        const theme = await axios.get(
-          process.env.NEXT_PUBLIC_BACKEND + '/themepreference',
-          {
-            withCredentials: true,
-          }
-        )
-      } catch (err) {
-        console.error(err)
-      }
-      setTheme(theme)
-
       try {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_BACKEND}/steam/getdisplayinfo`,
@@ -59,6 +45,8 @@ export function Navbar() {
 
     fetchProfileData()
   }, [])
+
+  if (pathname === '/' || pathname === '/LoginRedirect') return null
 
   return (
     <div className={styles.container}>
