@@ -583,7 +583,15 @@ app.get('/gamesByFilter', async (req, res) => {
     // Ensure numbers are properly converted
     minBoilRating = parseFloat(minBoilRating) || -1
     maxHLTB = parseInt(maxHLTB, 10) || 10000
-
+    console.log(
+      'Running filtering query\n',
+      minBoilRating,
+      minYear,
+      maxYear,
+      platform,
+      genre,
+      maxHLTB
+    )
     const { rows } = await pool.query(
       `SELECT g."name", g."header_image", g."description", g."boil_score", g."released", g."game_id"
        FROM "Games" g
@@ -608,9 +616,9 @@ app.get('/gamesByFilter', async (req, res) => {
        ORDER BY g."boil_score" DESC
        LIMIT 3;`,
       [genre, minBoilRating, minYear, maxYear, maxHLTB, steamId, platform]
-    )
-    console.log('Rows for filter: ' + rows) // Debugging log
-    res.json(rows)
+    );
+
+    res.json(rows);
   } catch (error) {
     console.error('Error fetching games:', error)
     res.status(500).json({ error: 'Internal Server Error' })
@@ -673,6 +681,8 @@ export async function insertGames(steamId: bigint) {
     if (!games || games.length === 0) {
       console.log('No games found for this user.')
       return { success: false, message: 'No games found for this user.' }
+      console.log("No games found for this user.");
+      return { success: false, message: "No games found for this user." };
     }
 
     const gameIds = games.map((game) => game.appid)
@@ -684,9 +694,15 @@ export async function insertGames(steamId: bigint) {
     )
 
     const existingGameIds = new Set(existingGames.rows.map((row) => String(row.game_id)))
+    const existingGameIds = new Set(
+      existingGames.rows.map((row) => String(row.game_id))
+    );
 
     // Filter valid games for User_Games (existing in our database)
     const validGames = games.filter((game) => existingGameIds.has(String(game.appid)))
+    const validGames = games.filter((game) =>
+      existingGameIds.has(String(game.appid))
+    );
 
     // Filter games for Buffer_Games:
     // 1. Not in our database
@@ -704,10 +720,17 @@ export async function insertGames(steamId: bigint) {
       const userGamesValues = validGames
         .map((game, index) => [game.appid, steamId, game.playtime_forever || 0])
         .flat()
+        .map((game, index) => [game.appid, steamId, game.playtime_forever || 0])
+        .flat();
 
       const userGamesPlaceholders = validGames
         .map((_, index) => `($${index * 3 + 1}, $${index * 3 + 2}, $${index * 3 + 3})`)
         .join(',')
+        .map(
+          (_, index) =>
+            `($${index * 3 + 1}, $${index * 3 + 2}, $${index * 3 + 3})`
+        )
+        .join(",");
 
       const userGamesQuery = `
         INSERT INTO "User_Games" ("game_id", "steam_id", "total_played")
@@ -723,10 +746,12 @@ export async function insertGames(steamId: bigint) {
     // Process Buffer_Games insertion if there are buffer games
     if (bufferGames.length > 0) {
       const bufferValues = bufferGames.map((game) => game.appid).flat()
+      const bufferValues = bufferGames.map((game) => game.appid).flat();
 
       const bufferPlaceholders = bufferGames
         .map((_, index) => `($${index + 1})`)
         .join(',')
+        .join(",");
 
       const bufferQuery = `
         INSERT INTO "Buffer_Games" ("game_id")
@@ -740,16 +765,23 @@ export async function insertGames(steamId: bigint) {
 
     if (validGames.length === 0 && bufferGames.length === 0) {
       console.log('No valid games found to insert')
+      console.log("No valid games found to insert");
       return {
         success: false,
         message: 'No valid games found to insert',
       }
+        message: "No valid games found to insert",
+      };
     }
 
     return {
       success: true,
       message: `Games inserted/updated successfully.`,
     }
+    return {
+      success: true,
+      message: `Games inserted/updated successfully.`,
+    };
   } catch (error) {
     console.error('Error in insertGames:', error)
     throw new Error('Internal Server Error')
