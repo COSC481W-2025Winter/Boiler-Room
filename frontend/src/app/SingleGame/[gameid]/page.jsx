@@ -85,6 +85,7 @@ const SingleGamePage = () => {
           </div>
           <div className={styles.reviews}>
             <strong>Steam Reviews</strong>
+            <strong className={styles.questionMark}> ?</strong>
             <br />
             <br />
             {game.recommendation_description +
@@ -92,6 +93,7 @@ const SingleGamePage = () => {
           </div>
           <div className={styles.hltb_score}>
             <strong>How Long to Beat</strong>
+            <strong className={styles.questionMark}> ?</strong>
             <span className={styles.tooltipText}>
               <strong>
                 The Average of the <br></br>Main Story & Main Story + Extras <br></br>

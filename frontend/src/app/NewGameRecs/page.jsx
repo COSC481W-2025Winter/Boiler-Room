@@ -221,7 +221,7 @@ export default function GameRecommendation() {
         <div className={styles.filters}>
           <form onSubmit={handleSubmit}>
             <div>
-              <label>Boil Rating: </label>
+              <label>Minimum Boil Rating: </label>
               <input
                 className={styles.tf}
                 type='text'

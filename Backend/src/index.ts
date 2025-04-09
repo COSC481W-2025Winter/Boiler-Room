@@ -687,7 +687,7 @@ app.get('/gamesByFilter', async (req, res) => {
        LIMIT 3;`,
       [genre, minBoilRating, minYear, maxYear, maxHLTB, steamId, platform]
     )
-    console.log('Rows for filter: ' + rows[0]?.game_id) // Debugging log
+    console.log('Rows for filter: ' + rows[0]) // Debugging log
     res.json(rows)
   } catch (error) {
     console.error('Error fetching games:', error)
